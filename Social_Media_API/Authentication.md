@@ -21,7 +21,7 @@ LoginView: is a view that handle login operation through validationg credentials
 
 It takes username and password:  
 
-if they are valid it generates new token and return a response that contain seccuss message with the token and this htto code status"HTTP_200_OK"
+if they are valid it generates new token and return a response that contains seccuss message with the token and this http code status"HTTP_200_OK"
 
 if they are not valid it return a message indicating that credentials are not valid with this http code status "HTTP_400_BAD_REQUEST" 
 
@@ -34,7 +34,7 @@ It required the user to be authenticated
 
 It takes the token and delete it   
 
-if deleted successfuly it return a mess age indicating seccussful logout and this http code status "HTTP_200_OK"  
+if deleted successfuly it return a message indicating seccussful logout and this http code status "HTTP_200_OK"  
 
 else it return an error with this message "Token does not exist." and this http code status "HTTP_400_BAD_REQUEST"  
 
