@@ -40,8 +40,8 @@ class UserFollow(models.Model):
 
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=100)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     bio = models.TextField(max_length=1000, null=True, blank=True)
 
