@@ -5,11 +5,23 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework import status
 from django.contrib.auth import get_user_model
-
 User = get_user_model()
 
+# Register view to handle the creation of a new user
 class RegisterView(APIView):
     def post(self, request):
+        """
+        Handle the creation of a new user.
+
+        Args:
+            request (Request): The request body with the user details.
+
+        Returns:
+            Response: A response with the result of the registration.
+
+        Raises:
+            Exception: If the registration of the user failed.
+        """
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
@@ -35,8 +47,21 @@ class RegisterView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+# Login view to handle user login and token generation
 class LoginView(APIView):
     def post(self, request):
+        """
+        Handle the login of a user.
+
+        Args:
+            request (Request): The request body with the user credentials.
+
+        Returns:
+            Response: A response with the result of the login and token.
+
+        Raises:
+            Exception: If the login of the user failed.
+        """
         username = request.data.get('username')
         password = request.data.get('password')
 
@@ -59,12 +84,21 @@ class LoginView(APIView):
         else:
             return Response({'error':'Invalid credentials.'}, status=status.HTTP_400_BAD_REQUEST)
 
-
+# Logout view to handle user logout and token deletion
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         
+        """
+        Handle the logout of a user by deleting the authentication token.
+
+        Args:
+            request (Request): The request object containing the user information.
+
+        Returns:
+            Response: A response indicating the success or failure of the logout operation.
+        """
         try:
             token = Token.objects.get(user=request.user)
             token.delete()

@@ -3,9 +3,24 @@ from django.contrib.auth.models import BaseUserManager
 from django.db import models
 from Social_Media_API import settings
 
-
+# custom user manager to handle user and superuser creation
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
+        """
+    Creates and saves a User with the given username, email, and password.
+
+    Args:
+        username (str): The username for the user.
+        email (str): The email address for the user.
+        password (str, optional): The password for the user. Defaults to None.
+        **extra_fields: Additional fields to include in the user creation.
+
+    Raises:
+        ValueError: If the username or email is not provided.
+
+    Returns:
+        CustomUser: The created user instance.
+        """
         if not username:
             raise ValueError("The username field must be set")
         if not email:
@@ -17,10 +32,22 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, password, **extra_fields):
+        """
+    Creates and saves a superuser with the given username and password.
+
+    Args:
+        username (str): The username for the superuser.
+        password (str): The password for the superuser.
+        **extra_fields: Additional fields to include in the superuser creation.
+
+    Returns:
+        CustomUser: The created superuser instance.
+        """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(username, password, **extra_fields)
-    
+
+# user follow model to handle user follow relationship    
 class UserFollow(models.Model):
     follower = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE
@@ -38,7 +65,7 @@ class UserFollow(models.Model):
     def __str__(self):
         return f"{self.follower} follows {self.followed}"
 
-
+# custom user model to extend more fields
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=100)
     first_name = models.CharField(max_length=100, null=True, blank=True)
@@ -52,4 +79,10 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
     
     def __str__(self):
-        return self.username  # Or self.email or another field
+        """
+        Returns the username of the user as a string.
+
+        Returns:
+            str: The username of the user.
+        """
+        return self.username  
