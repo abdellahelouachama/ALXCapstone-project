@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from account.models import Followers
-from .permissions import IsLoggedIn
+from .permissions import IsAccountOwner
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework.decorators import action
@@ -118,11 +118,11 @@ class LogoutView(APIView):
 
 # User Profile managment 
 # User API view to retrieve, update, and delete user data, requires authentication and isLoggedIn permission
-# Note: the user creation is handled in the Register view in the user app
+# Note: the user creation is handled in the Register view as a part of authentication system
 class UserAPIView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsLoggedIn]
+    permission_classes = [IsAuthenticated, IsAccountOwner]
     lookup_field = 'username'
 
     def get_object(self):
