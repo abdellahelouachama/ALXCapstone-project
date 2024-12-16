@@ -1,4 +1,5 @@
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from .serializers import UserSerializer, UserFollowSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
@@ -119,7 +120,7 @@ class LogoutView(APIView):
 # User Profile managment 
 # User API view to retrieve, update, and delete user data, requires authentication and isLoggedIn permission
 # Note: the user creation is handled in the Register view as a part of authentication system
-class UserAPIView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
+class UserAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAccountOwner]
