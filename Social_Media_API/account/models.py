@@ -48,7 +48,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
 
 # user follow model to handle user follow relationship    
-class UserFollow(models.Model):
+class Followers(models.Model):
     follower = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE
     )
@@ -67,9 +67,7 @@ class UserFollow(models.Model):
 
 # custom user model to extend more fields
 class CustomUser(AbstractUser):
-    email = models.EmailField(max_length=100)
-    first_name = models.CharField(max_length=100, null=True, blank=True)
-    last_name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(max_length=100, unique=True)
     profile_picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     bio = models.TextField(max_length=1000, null=True, blank=True)
 
