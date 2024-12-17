@@ -13,13 +13,14 @@ urlpatterns = [
 
 ]
 
-# url patterns for the user viewset
+# url patterns for the user actions
 urlpatterns += [
-    # this url pattern handle all the user operations(retrieve, partial update, update, delete)
+    # these url patterns handle all the user operations(retrieve, partial update, update, delete)
     # and based on the request method the appropriate view will be called (GET, PUT, PATCH, DELETE)
+    # we used the same url pattern for all user actions, but we diffentiate them based on the request method 
     path('profile/<username>', views.UserAPIView.as_view(), name='user'),
     
     # custom actions follow and unfollow
-    path('profile/<username>/follow', views.UserAPIView.as_view(), name='follow'),
-    path('profile/<username>/unfollow', views.UserAPIView.as_view(), name='unfollow'),
+    path('follow/<username>', views.FollowAPIView.as_view({'post':'follow'}), name='follow'),
+    path('unfollow/<username>', views.FollowAPIView.as_view({'delete':'unfollow'}), name='unfollow'),
 ]

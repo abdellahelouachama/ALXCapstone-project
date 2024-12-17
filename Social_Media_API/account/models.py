@@ -65,7 +65,7 @@ class Followers(models.Model):
     def __str__(self):
         return f"{self.follower} follows {self.followed}"
 
-# custom user model to extend more fields
+# custom user model to extend user fields
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
     profile_picture = models.ImageField(upload_to='uploads/', null=True, blank=True)

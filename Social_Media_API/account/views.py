@@ -15,7 +15,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-
 # Register view to handle the creation of a new user
 class RegisterView(APIView):
     def post(self, request):
@@ -112,9 +111,9 @@ class LogoutView(APIView):
             token = Token.objects.get(user=request.user)
             token.delete()
             return Response({'message': 'Logout successful.'}, status=status.HTTP_200_OK)
+        
         except Token.DoesNotExist:
             return Response({'error': 'Token does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 # User Profile managment 
@@ -167,7 +166,15 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
             instance: The user object to be deleted
         """
         instance.delete()
-    
+
+
+# Follow system to enble following and unfollowing relationships betewen users
+class FollowAPIView(GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserFollowSerializer
+    lookup_field = 'username'
+    permission_classes = [IsAuthenticated]
+
     @action(detail=True, methods=['POST'], url_path='follow')
     def follow(self, request, username=None):
         """
@@ -177,7 +184,8 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
             request: The request object containing the user information.
 
         Returns:
-            Response: A response with a success message and a 201 status code if the follow is successful, otherwise a response with an error message and a 400 status code.
+            Response: A response with a success message and a 201 status code if the follow is successful,
+            otherwise a response with an error message and a 400 status code.
         """
         # get the followed user
         user = self.queryset.get(username=username)
@@ -193,7 +201,8 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         # check if the data is valid
         if serializer.is_valid():
             serializer.save()
-            return Response ({'message':'followed successfully'}, status=status.HTTP_201_CREATED)
+            # Note: when user follow is successful, we have to generate notification (developed later)
+            return Response ({'message':'Followed successfully'}, status=status.HTTP_201_CREATED)
         
         return Response ({'error':'follow failed'}, status=status.HTTP_400_BAD_REQUEST)        
 
@@ -221,6 +230,6 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         except Followers.DoesNotExist:
             return Response({'error': 'You are not following this user'}, status=status.HTTP_404_NOT_FOUND) 
         
-        # delete the follow
+        # delete the follow object
         instance.delete()
         return Response({'message': 'Unfollowed successfully'}, status=status.HTTP_200_OK)
