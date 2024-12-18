@@ -17,4 +17,3 @@ class IsPostAuthor(BasePermission):
         if request.method in ['PUT', 'DELETE', 'PATCH']:
             return request.user == obj.author
         
-        return True

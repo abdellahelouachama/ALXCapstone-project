@@ -1,4 +1,3 @@
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from .serializers import UserSerializer, UserFollowSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -90,7 +89,7 @@ class LoginView(APIView):
             )
         
         else:
-            return Response({'error':'Invalid credentials.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error':'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Logout view to handle user logout and token deletion
 class LogoutView(APIView):
@@ -117,26 +116,13 @@ class LogoutView(APIView):
 
 
 # User Profile managment 
-# User API view to retrieve, update, and delete user data, requires authentication and isLoggedIn permission
+# User API view to retrieve, update, and delete user data, requires authentication and IsAccountOwner permission
 # Note: the user creation is handled in the Register view as a part of authentication system
 class UserAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAccountOwner]
     lookup_field = 'username'
-
-    def get_object(self):
-        """
-    Retrieve and return the user object based on the username lookup field.
-
-    Checks the permissions for the retrieved object before returning it.
-
-    Returns:
-        User: The user object if permissions are granted and the object is found.
-        """
-        obj =  super().get_object()
-        self.check_object_permissions(self.request, obj)
-        return obj
     
     def destroy(self, request, *args, **kwargs):
         """
@@ -152,20 +138,16 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         Response: A response with a success message and a 200 status code
         """
         instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(
-            {"message": "Deleted successfully."}, 
-            status=status.HTTP_200_OK
-        )
 
-    def perform_destroy(self, instance):
-        """
-        Destroy the given user object.
+        if instance is not None:
+            self.perform_destroy(instance)
 
-        Args:
-            instance: The user object to be deleted
-        """
-        instance.delete()
+            return Response(
+                {"message": "Deleted successfully."}, 
+                status=status.HTTP_200_OK
+                )
+        
+        return Response({"error": 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 # Follow system to enble following and unfollowing relationships betewen users

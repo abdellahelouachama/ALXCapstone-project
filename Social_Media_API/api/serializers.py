@@ -17,6 +17,7 @@ class PostSerializer(ModelSerializer):
         return super().create(validated_data)
     
     def update(self, instance, validated_data):
+
         """
     Update an existing Post object with the given validated data and 
     associate it with the user making the request.
@@ -31,3 +32,8 @@ class PostSerializer(ModelSerializer):
 
         validated_data['author'] = self.context['request'].user
         return super().update(instance, validated_data)
+    
+    
+
+
+        
