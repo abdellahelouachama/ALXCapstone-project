@@ -4,15 +4,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from account.models import Followers
-from .permissions import IsAccountOwner
-from rest_framework import status
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework.decorators import action
-from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
+from .permissions import IsAccountOwner
+from account.models import Followers
+from rest_framework import status
 User = get_user_model()
-
 
 # Register view to handle the creation of a new user
 class RegisterView(APIView):
@@ -114,7 +113,6 @@ class LogoutView(APIView):
         except Token.DoesNotExist:
             return Response({'error': 'Token does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 # User Profile managment 
 # User API view to retrieve, update, and delete user data, requires authentication and IsAccountOwner permission
 # Note: the user creation is handled in the Register view as a part of authentication system
@@ -148,7 +146,6 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
                 )
         
         return Response({"error": 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
 
 # Follow system to enble following and unfollowing relationships betewen users
 class FollowAPIView(GenericViewSet):

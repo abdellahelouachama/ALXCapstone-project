@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer,  StringRelatedField
-from posts.models import Post
+from posts.models import Post, Comment
 
 # Post serializer to handle data conversion (serialization, diserialization)
 class PostSerializer(ModelSerializer):
@@ -33,7 +33,15 @@ class PostSerializer(ModelSerializer):
         validated_data['author'] = self.context['request'].user
         return super().update(instance, validated_data)
     
-    
+# Comment serializer for data conversion
+class CommentSerializer(ModelSerializer):
+    post_title = StringRelatedField(source='post', read_only=True)
+    author_name = StringRelatedField(source='author', read_only=True)
 
-
-        
+    class Meta:
+        model = Comment
+        fields = ['post_title', 'post', 'author', 'author_name', 'content']
+        extra_kwargs = {
+            'post': {'write_only': True},  # Hide 'post' in the response
+            'author': {'write_only': True}, # Hide 'author' in the response
+        }

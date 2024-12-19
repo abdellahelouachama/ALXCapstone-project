@@ -1,7 +1,7 @@
-from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
-from django.db import models
+from django.contrib.auth.models import AbstractUser
 from Social_Media_API import settings
+from django.db import models
 
 # custom user manager to handle user and superuser creation
 class CustomUserManager(BaseUserManager):
@@ -25,8 +25,10 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("The username field must be set")
         if not email:
             raise ValueError("The email field must be set")
+        
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
+
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -45,6 +47,7 @@ class CustomUserManager(BaseUserManager):
         """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+
         return self.create_user(username, password, **extra_fields)
 
 # user follow model to handle user follow relationship    

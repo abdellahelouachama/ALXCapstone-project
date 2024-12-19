@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-from account.models import Followers
 from django.contrib.auth import get_user_model
+from account.models import Followers
 User = get_user_model()
 
 # User Serializer to handle user data conversion (serialization, deserialization)
