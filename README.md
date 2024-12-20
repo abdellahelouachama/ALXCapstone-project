@@ -1,6 +1,7 @@
 # Social Media API
 
-This project is a Social Media API designed to support functionalities such as user authentication, content sharing, and interaction between users. It serves as the backend for a social media platform.
+This Social Media API is a robust and scalable backend solution designed to power social media platforms. It offers essential features such as user authentication (registration, login, and logout), post management, and profile management. Users can interact dynamically by following and unfollowing others, commenting on posts, and liking content. Additionally, the API supports a notification system to keep users informed about important interactions. Built with modern web technologies, this API is tailored to deliver a seamless and efficient user experience while providing a solid foundation for further enhancements.
+
 
 ## Features
 
@@ -17,8 +18,7 @@ This project is a Social Media API designed to support functionalities such as u
   ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
 - **Database**:
   ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-- **Authentication**: [JWT] 
-
+  
 
 ## API Endpoints
 
@@ -44,7 +44,7 @@ This project is a Social Media API designed to support functionalities such as u
 | Endpoint                             | Description |
 |--------------------------------------|-------------|
 | `POST /account/follow/<username>`    | Allows the logged-in user to follow another user. Responds with a confirmation message on success, or an error if the action cannot be completed. |
-| `DELETE /account/unfollow/<username>`| Allows the logged-in user to unfollow another user. Responds with 200 OK or 400 Bad Request if the user was not followed |
+| `DELETE /account/unfollow/<username>`| Allows the logged-in user to unfollow another user. Responds with 200 OK or 404 Not Found if the user was not followed |
 
 ## Post Management Endpoints
 

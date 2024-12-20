@@ -24,6 +24,8 @@ urlpatterns = [
     # account app handle authentication and profile managment
     path('account/', include('account.urls')),
     # api to handle crud operations for the api
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    # notification app to handle notification (generation, and reteriving)
+    path('notification/', include('notification.urls'))
     
 ]

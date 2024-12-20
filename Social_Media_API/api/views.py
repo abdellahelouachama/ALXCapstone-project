@@ -1,15 +1,16 @@
+from .serializers import PostSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated
+from notification.views import generate_notification
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.viewsets import ModelViewSet
+from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .serializers import PostSerializer, CommentSerializer
-from .permissions import IsAuthor
-from account.models import Followers
-from rest_framework import status
-from .pagination import CustomPagination
 from posts.models import Post, Like, Comment
-from django.contrib.auth import get_user_model
+from .pagination import CustomPagination
+from account.models import Followers
+from .permissions import IsAuthor
+from rest_framework import status
 User = get_user_model()
 
 # Post managment
@@ -48,9 +49,10 @@ class PostViewSet(ModelViewSet):
         if post:
 
             if not Like.objects.filter(user=user, post=post).exists():
+                like = Like.objects.create(user=user, post=post)
 
-                Like.objects.create(user=user, post=post)
-                # Note: when a user like a post successfuly, we have to generate notification (developed later)
+                # create notification
+                generate_notification(Like, post.author, user, like.id)
                 return Response({"message":"Successful liking"}, status=status.HTTP_201_CREATED)
             
             else:
@@ -186,8 +188,7 @@ class CommentViewSet(ModelViewSet):
         
         return self.queryset
 
-    def create(self, request, *args, **kwargs):
-        
+    def create(self, request, *args, **kwargs):        
         """
         Create a new Comment object with the given validated data and associate it
         with the user making the request.
@@ -200,20 +201,22 @@ class CommentViewSet(ModelViewSet):
             otherwise a response with an error message and a 400 status code if the comment is not created.
         """
 
-        post = request.data.get('post')
+        post_id = request.data.get('post')
         content = request.data.get('content')
         author = request.user
         
-        comment_data = {'author':author.id ,'post':post, 'content':content}
-        serializer =self.get_serializer(data=comment_data)
-
+        comment_data = {'author':author.id ,'post':post_id, 'content':content}
+        serializer = self.get_serializer(data=comment_data)
+        
         if serializer.is_valid():
-            self.perform_create(serializer)
+            comment = serializer.save()
+            post = Post.objects.get(id=post_id)
 
-            # Note: when a user comment on a post successfuly, we have to generate notification (developed later)
+            # create notification
+            generate_notification(Comment, post.author, author, comment.id)
             return Response({"message":"Commented successfully"}, status=status.HTTP_201_CREATED)
         
-        return Response({"error":"Comment Failed"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Comment Failed, Please provide a valid comment, and an existing post"}, status=status.HTTP_400_BAD_REQUEST)
     
     def update(self, request, *args, **kwargs):     
         """

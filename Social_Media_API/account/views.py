@@ -2,6 +2,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from .serializers import UserSerializer, UserFollowSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
+from notification.views import generate_notification
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -167,20 +168,22 @@ class FollowAPIView(GenericViewSet):
             otherwise a response with an error message and a 400 status code.
         """
         # get the followed user
-        user = self.queryset.get(username=username)
+        followed = self.queryset.get(username=username)
         
         # check if the user is trying to follow themselves
-        if user == request.user:
+        if followed == request.user:
             return Response({'error': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
         
         # create the follow
-        follow_data = {'follower': request.user.id, 'followed': user.id}
+        follow_data = {'follower': request.user.id, 'followed': followed.id}
         serializer = UserFollowSerializer(data=follow_data)
         
         # check if the data is valid
         if serializer.is_valid():
-            serializer.save()
-            # Note: when user follow is successful, we have to generate notification (developed later)
+            created_object  = serializer.save()
+            
+            # create notification
+            generate_notification(Followers, followed, request.user, created_object.id)
             return Response ({'message':'Followed successfully'}, status=status.HTTP_201_CREATED)
         
         return Response ({'error':'follow failed'}, status=status.HTTP_400_BAD_REQUEST)        
