@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-# Custom permission 
+# Custom permission to ensure the logged-in user is the owner of the account.
 class IsAccountOwner(BasePermission):
     def has_object_permission(self, request, view, obj):  
         

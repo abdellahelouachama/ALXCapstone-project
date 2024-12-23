@@ -32,9 +32,9 @@ class RegisterView(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
-        first_name = request.data.get("first_name", "")
-        last_name = request.data.get("last_name", "")
-        profile_picture = request.data.get("profile_picture", None)
+        first_name = request.data.get("first name", "")
+        last_name = request.data.get("last name", "")
+        profile_picture = request.data.get("profile picture", "")
         bio = request.data.get("bio", "")
 
         if not username or not email or not password:
@@ -122,7 +122,7 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAccountOwner]
     lookup_field = 'username'
-    
+        
     def destroy(self, request, *args, **kwargs):
         """
     Custom destroy method to return a 200 status code with a success message
@@ -147,7 +147,7 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
                 )
         
         return Response({"error": 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
+    
 # Follow system to enble following and unfollowing relationships betewen users
 class FollowAPIView(GenericViewSet):
     queryset = User.objects.all()
@@ -168,7 +168,10 @@ class FollowAPIView(GenericViewSet):
             otherwise a response with an error message and a 400 status code.
         """
         # get the followed user
-        followed = self.queryset.get(username=username)
+        try:
+            followed = self.queryset.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         
         # check if the user is trying to follow themselves
         if followed == request.user:
@@ -202,13 +205,19 @@ class FollowAPIView(GenericViewSet):
     Returns:
         Response: A response with a success message and a 200 status code
         """
-        # get the followed user
-        followed_user = self.queryset.get(username=username)
         
         try:
+            # get the followed user
+            followed_user = self.queryset.get(username=username)
+
             # check if the user is following the followed user
             instance = Followers.objects.get(follower=request.user, followed=followed_user)
-
+      
+        except User.DoesNotExist:
+            # return error if the user is not found
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+             
+            # return error if the follow object is not found
         except Followers.DoesNotExist:
             return Response({'error': 'You are not following this user'}, status=status.HTTP_404_NOT_FOUND) 
         

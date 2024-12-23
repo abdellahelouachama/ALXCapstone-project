@@ -90,47 +90,32 @@ class PostViewSet(ModelViewSet):
             like.delete()
             return Response({"message":"Successful unliking"}, status=status.HTTP_200_OK)
 
-    
 # Feed of Posts 
 class FeedAPIView(GenericViewSet):
-    queryset = Post.objects.all().order_by('-created_at') 
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
-
+ 
     def get_queryset(self):
-    
         """
-        Get the queryset of posts for the current user. The queryset is a collection of posts
-        created by users that the current user follows. The posts are ordered by the most
-        recent ones first. If the 'title' parameter is provided, the queryset is filtered to
-        only include posts with that title, if title is not provided, all posts are returned.
-
-        Returns:
-            Queryset: A queryset of posts ordered by the most recent ones first.
+        Retrieve a queryset of posts filtered by followed users.
+        and title if provided.
         """
         user = self.request.user
-        followed_users = Followers.objects.filter(follower=user.id).values('followed')
-
-        title = self.request.query_params.get('title')
-        filterd_posts = self.queryset.filter(author__in=followed_users)
-
-        if title is not None:
-            filterd_posts = filterd_posts.filter(title=title)
+        followed_users = Followers.objects.filter(follower=user.id).values("followed")
+     
+        filtered_posts = self.queryset.filter(author__in=followed_users)
         
-        return filterd_posts
+        title = self.request.query_params.get("title")
+        if title:
+            filtered_posts = filtered_posts.filter(title=title)
+
+
+        return filtered_posts
 
     @action(detail=False, methods=['GET'], url_path='feed')
-    def feed(self, request):       
-        """
-        Get the feed of posts for the current user. The feed is a collection of posts
-        created by users that the current user follows. The posts are ordered by the most
-        recent ones first. If the 'title' parameter is provided, the feed is filtered to
-        only include posts with that title, if title is not provided, all posts are returned.
-
-        Returns:
-            Response: A response with the feed of posts ordered by the most recent ones first.
-        """
+    def feed(self, request):         
         posts_feed = self.get_queryset()
         page = self.paginate_queryset(posts_feed)
         
@@ -140,7 +125,6 @@ class FeedAPIView(GenericViewSet):
             return self.get_paginated_response(serializer.data)
         
         return Response({"message": "No posts found."}, status=status.HTTP_204_NO_CONTENT)
-
 
 # Comment viewset to handle comment operations
 class CommentViewSet(ModelViewSet):

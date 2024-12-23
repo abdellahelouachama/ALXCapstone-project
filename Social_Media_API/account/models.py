@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from Social_Media_API import settings
 from django.db import models
 
-# custom user manager to handle user and superuser creation
+# custom user manager to handle user creation and superuser creation
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         """
@@ -50,7 +50,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(username, password, **extra_fields)
 
-# user follow model to handle user follow relationship    
+# model to handle user followings
 class Followers(models.Model):
     follower = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE
@@ -68,8 +68,10 @@ class Followers(models.Model):
     def __str__(self):
         return f"{self.follower} follows {self.followed}"
 
-# custom user model to extend user fields
+# custom user model to handle user creation and superuser creation
 class CustomUser(AbstractUser):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     profile_picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     bio = models.TextField(max_length=1000, null=True, blank=True)
