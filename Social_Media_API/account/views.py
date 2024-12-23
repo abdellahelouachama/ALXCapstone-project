@@ -125,16 +125,16 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         
     def destroy(self, request, *args, **kwargs):
         """
-    Custom destroy method to return a 200 status code with a success message
-    instead of the default 204 status code with an empty response.
+        Custom destroy method to return a 200 status code with a success message
+        instead of the default 204 status code with an empty response.
 
-    Args:
-        request: The request object
-        *args: Additional positional arguments
-        **kwargs: Additional keyword arguments
+        Args:
+            request: The request object
+            *args: Additional positional arguments
+            **kwargs: Additional keyword arguments
 
-    Returns:
-        Response: A response with a success message and a 200 status code
+        Returns:
+            Response: A response with a success message and a 200 status code
         """
         instance = self.get_object()
 
@@ -195,15 +195,15 @@ class FollowAPIView(GenericViewSet):
     @action(detail=True, methods=['DELETE'], url_path='unfollow')
     def unfollow(self, request, username=None):        
         """
-    Unfollow a user
+        Unfollow a user
 
-    Deletes the UserFollow object that links the request.user to the followed user.
+        Deletes the UserFollow object that links the request.user to the followed user.
 
-    Args:
-        request: The request object
+        Args:
+            request: The request object
 
-    Returns:
-        Response: A response with a success message and a 200 status code
+        Returns:
+            Response: A response with a success message and a 200 status code
         """
         
         try:

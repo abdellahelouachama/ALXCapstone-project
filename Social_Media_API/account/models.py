@@ -59,12 +59,7 @@ class Followers(models.Model):
         settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('follower', 'followed')  # Prevent duplicate follows
-        verbose_name = 'User Follow'
-        verbose_name_plural = 'User Follows'
-
+    
     def __str__(self):
         return f"{self.follower} follows {self.followed}"
 

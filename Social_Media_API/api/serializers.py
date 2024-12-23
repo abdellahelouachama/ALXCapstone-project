@@ -19,15 +19,15 @@ class PostSerializer(ModelSerializer):
     def update(self, instance, validated_data):
 
         """
-    Update an existing Post object with the given validated data and 
-    associate it with the user making the request.
+        Update an existing Post object with the given validated data and 
+        associate it with the user making the request.
 
-    Args:
-        instance (Post): The Post instance to be updated.
-        validated_data (dict): The validated data to update the Post instance with.
+        Args:
+            instance (Post): The Post instance to be updated.
+            validated_data (dict): The validated data to update the Post instance with.
 
-    Returns:
-        Post: The updated Post instance.
+        Returns:
+            Post: The updated Post instance.
         """
 
         validated_data['author'] = self.context['request'].user

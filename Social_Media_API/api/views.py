@@ -146,7 +146,6 @@ class CommentViewSet(ModelViewSet):
                   otherwise None if the specified author or post does not exist,
                   or all comments if no parameters are provided.
         """
-
         author = self.request.query_params.get('author')
         post = self.request.query_params.get('post')   
             
