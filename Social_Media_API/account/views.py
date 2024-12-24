@@ -112,7 +112,7 @@ class LogoutView(APIView):
             return Response({'message': 'Logout successful.'}, status=status.HTTP_200_OK)
         
         except Token.DoesNotExist:
-            return Response({'error': 'Token does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # User Profile managment 
 # User API view to retrieve, update, and delete user data, requires authentication and IsAccountOwner permission
@@ -143,7 +143,7 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
 
             return Response(
                 {"message": "Deleted successfully."}, 
-                status=status.HTTP_200_OK
+                status=status.HTTP_204_NO_CONTENT
                 )
         
         return Response({"error": 'User not found'}, status=status.HTTP_404_NOT_FOUND)
