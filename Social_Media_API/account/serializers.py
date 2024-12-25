@@ -10,8 +10,7 @@ class UserSerializer(ModelSerializer):
         fields = ['username', 'first_name', 'last_name', 'email', 'profile_picture', 'bio']
 
 # UserFollow Serializer to handle user follow data conversion (serialization, deserialization) 
-class UserFollowSerializer(ModelSerializer):
-    
+class UserFollowSerializer(ModelSerializer):  
     class Meta:
         model = Followers
         fields = '__all__'

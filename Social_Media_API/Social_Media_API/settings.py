@@ -74,25 +74,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Social_Media_API.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
+# Database settings
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Use MySQL backend
-        'NAME': 'social_media_api',  # The name of your database
-        'USER': 'root',      # Your MySQL username
-        'PASSWORD': 'Doulingo2023@',  # Your MySQL password
-        'HOST': 'localhost',   # Host where MySQL is running (use 'localhost' or '127.0.0.1' for local machine)
-        'PORT': '3306',        # MySQL default port
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'social_media_api',  
+        'USER': 'root',      
+        'PASSWORD': 'Doulingo2023@',  
+        'HOST': 'localhost',   
+        'PORT': '3306',        
     }
 }
 

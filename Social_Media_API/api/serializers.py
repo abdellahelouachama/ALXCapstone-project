@@ -3,6 +3,7 @@ from posts.models import Post, Comment
 
 # Post serializer to handle data conversion (serialization, diserialization)
 class PostSerializer(ModelSerializer):
+    # StringRelatedField is used to represent the author field as a string.
     author_name = StringRelatedField(source='author', read_only=True)
     class Meta:
         model = Post
@@ -35,6 +36,7 @@ class PostSerializer(ModelSerializer):
     
 # Comment serializer for data conversion
 class CommentSerializer(ModelSerializer):
+    # StringRelatedField is used to represent the post field and author name as a string.
     post_title = StringRelatedField(source='post', read_only=True)
     author_name = StringRelatedField(source='author', read_only=True)
 

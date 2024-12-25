@@ -12,6 +12,7 @@ from .pagination import CustomPagination
 from account.models import Followers
 User = get_user_model()
 
+# Notification verb templates
 VERB_TEMPLATES = {
     'like':'New Like',
     'comment':'New Comment',

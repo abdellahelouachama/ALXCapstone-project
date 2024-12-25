@@ -3,6 +3,7 @@ from .models import Notification
 
 class NotificationSerializer(ModelSerializer):
     """Serializer to handle notification data conversion."""
+    
     # StringRelatedField is used to represent the target field as a string.
     actor = StringRelatedField(read_only=True)
 

@@ -17,9 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
+# Url patterns for the project
 urlpatterns = [
-
     path('admin/', admin.site.urls),
     # account app handle authentication and profile managment
     path('account/', include('account.urls')),

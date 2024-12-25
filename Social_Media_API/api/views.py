@@ -14,7 +14,7 @@ from rest_framework import status
 from datetime import datetime
 User = get_user_model()
 
-# Post managment
+# Post managment viewset to handle post operations
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -91,7 +91,7 @@ class PostViewSet(ModelViewSet):
             like.delete()
             return Response({"message":"Successful unliking"}, status=status.HTTP_200_OK)
 
-# Feed of Posts 
+# Feed of Posts viewset to handle feed operation
 class FeedAPIView(GenericViewSet):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
@@ -180,7 +180,8 @@ class CommentViewSet(ModelViewSet):
         """
         author = self.request.query_params.get('author')
         post = self.request.query_params.get('post')   
-            
+
+        # Filter comments by author if provided    
         if author is not None:
             try:  
 
@@ -190,7 +191,8 @@ class CommentViewSet(ModelViewSet):
             
             except User.DoesNotExist:
                 return None
-          
+        
+        # Filter comments by post if provided
         elif post is not None:
             try:
 

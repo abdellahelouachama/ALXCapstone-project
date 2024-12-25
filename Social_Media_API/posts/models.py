@@ -33,4 +33,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Returns the comment content as a string."""
         return self.content
