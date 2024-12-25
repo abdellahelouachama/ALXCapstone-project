@@ -27,8 +27,8 @@ This Social Media API is a robust and scalable backend solution designed to powe
 | Endpoint                          | Description |
 |-----------------------------------|-------------|
 | `POST /account/register/`         | Registers a new user with required fields (username, password, email) and optional fields (first_name, last_name, profile_picture, bio). Responds with 201 Created and a success message. |
-| `POST /account/login/`            | Validates user credentials (username, password) and returns a token if successful. Responds with 200 OK and token, or 400 Bad Request for invalid credentials. |
-| `POST /account/logout/`           | Logs out a user by invalidating the token. Responds with 200 OK and a success message, or 404 Bad Request if the token is invalid. |
+| `POST /account/login/`            | Validates user credentials (username, password) and returns a token if successful. Responds with 200 OK and token, or 401 unauthorized for invalid credentials. |
+| `POST /account/logout/`           | Logs out a user by invalidating the token. Responds with 200 OK and a success message, or  if the token is invalid 401 unauthorized. |
 
 ## User Management Endpoints
 
@@ -65,7 +65,7 @@ This Social Media API is a robust and scalable backend solution designed to powe
 
 | Endpoint                              | Description |
 |---------------------------------------|-------------|
-| `POST /api/posts/<title>/like/`       | Likes a post. Responds with 200 OK if successful, or 404 Not Found if the post does not exist. |
+| `POST /api/posts/<title>/like/`       | Likes a post. Responds with 201 created if successful, or 404 Not Found if the post does not exist. |
 | `DELETE /api/posts/<title>/unlike/`   | Removes like from a post. Responds with 200 OK if successful, or 404 Not Found if the post was not liked. |
 
 ## Comment Endpoints
