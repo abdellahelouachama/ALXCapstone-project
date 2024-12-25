@@ -110,7 +110,7 @@ class FeedAPIView(GenericViewSet):
         # Filter posts by the users the authenticated user follows
         filtered_posts = self.queryset.filter(author__in=followed_users)
         
-        # Filter posts by title or date if provided
+        # Filter posts by title if provided
         title = self.request.query_params.get("title")
         if title:
             
