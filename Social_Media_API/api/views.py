@@ -11,6 +11,7 @@ from .pagination import CustomPagination
 from account.models import Followers
 from .permissions import IsAuthor
 from rest_framework import status
+from datetime import datetime
 User = get_user_model()
 
 # Post managment
@@ -100,26 +101,57 @@ class FeedAPIView(GenericViewSet):
     def get_queryset(self):
         """
         Retrieve a queryset of posts filtered by followed users.
-        and title if provided.
+        and optional query parameters 'title' or 'date'.
         """
+        # Get the authenticated user and the users they follow
         user = self.request.user
         followed_users = Followers.objects.filter(follower=user.id).values("followed")
-     
+        
+        # Filter posts by the users the authenticated user follows
         filtered_posts = self.queryset.filter(author__in=followed_users)
         
+        # Filter posts by title or date if provided
         title = self.request.query_params.get("title")
         if title:
-            filtered_posts = filtered_posts.filter(title=title)
+            
+            # validate the title
+            try:
+                post = filtered_posts.get(title=title)
+                filtered_posts = filtered_posts.filter(title=title)
 
+            except Post.DoesNotExist:
+                return "No Post Found Matching This Title"    
+        
+        # Filter posts by date if provided
+        date = self.request.query_params.get("date")
+        if date:
+            
+            # validate the date
+            try:
+                date = datetime.strptime(date, "%Y-%m-%d").date()
+                filtered_posts = filtered_posts.filter(created_at__date=date)   
+
+            except ValueError as e:
+                return "Invalid date format"
 
         return filtered_posts
 
     @action(detail=False, methods=['GET'], url_path='feed')
     def feed(self, request):         
+        """return the feed of posts for the authenticated user"""
+
         posts_feed = self.get_queryset()
+        
+        if posts_feed == "Invalid date format":
+            return Response({"error":"Invalid date format, please provide a date in the format 'YYYY-MM-DD'"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif posts_feed == "No Post Found Matching This Title":
+            return Response({"error":"No Post Found Matching This Title"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Paginate the posts feed
         page = self.paginate_queryset(posts_feed)
         
-        
+        # Return the paginated response
         if page is not None:
             serializer = self.get_serializer(posts_feed, many=True)
             return self.get_paginated_response(serializer.data)

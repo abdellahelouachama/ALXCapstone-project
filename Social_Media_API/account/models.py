@@ -65,8 +65,6 @@ class Followers(models.Model):
 
 # custom user model to handle user creation and superuser creation
 class CustomUser(AbstractUser):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     profile_picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     bio = models.TextField(max_length=1000, null=True, blank=True)
