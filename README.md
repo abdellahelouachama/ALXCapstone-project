@@ -94,9 +94,8 @@ This Social Media API is a robust and scalable backend solution designed to powe
 
 2. Navigate to the Project Directory : 
   ```bash
-    cd /path/to/project
-
-
+    cd /path/to/project  
+    
 3. Install the dependencies :
   ```bash
     pip install -r requirements.txt
