@@ -88,8 +88,6 @@ This Social Media API is a robust and scalable backend solution designed to powe
 
 ## Setup and Installation
 
-## Setup and Installation
-
 Run the following commands in your terminal to set up the project:
 
 ```bash
