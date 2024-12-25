@@ -88,16 +88,17 @@ This Social Media API is a robust and scalable backend solution designed to powe
 
 ## Setup and Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/social-media-api.git
+## Setup and Installation
 
-2. Navigate to the Project Directory : 
-  ```bash
-    cd /path/to/project 
-    
-3. Install the dependencies :
-  ```bash
-    pip install -r requirements.txt
+Run the following commands in your terminal to set up the project:
 
+```bash
+# Clone the repository
+git clone https://github.com/your-username/social-media-api.git
+
+# Navigate to the project directory
+cd /path/to/project
+
+# Install the dependencies
+pip install -r requirements.txt
 
