@@ -79,8 +79,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'social_media_api',  
-        'USER': 'root',      
-        'PASSWORD': 'Doulingo2023@',  
+        'USER': '',      
+        'PASSWORD': '',  
         'HOST': 'localhost',   
         'PORT': '3306',        
     }
