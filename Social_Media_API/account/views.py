@@ -123,30 +123,6 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsAccountOwner]
     lookup_field = 'username'
         
-    def destroy(self, request, *args, **kwargs):
-        """
-        Custom destroy method to return a 200 status code with a success message
-        instead of the default 204 status code with an empty response.
-
-        Args:
-            request: The request object
-            *args: Additional positional arguments
-            **kwargs: Additional keyword arguments
-
-        Returns:
-            Response: A response with a success message and a 200 status code
-        """
-        instance = self.get_object()
-
-        if instance is not None:
-            self.perform_destroy(instance)
-
-            return Response(
-                {"message": "Deleted successfully."}, 
-                status=status.HTTP_204_NO_CONTENT
-                )
-        
-        return Response({"error": 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     
 # Follow system to enble following and unfollowing relationships betewen users
 class FollowAPIView(GenericViewSet):
